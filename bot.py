@@ -95,4 +95,18 @@ async def xp(ctx):
     xp = math.ceil(counter * 0.5)
     await bot.edit_message(mesg, '{} has {}xp.'.format(ctx.message.author.name, str(xp)))
 
+@bot.command(pass_context=True)
+@validation()
+async def listmembers(ctx):
+    for server in bot.servers:
+        for member in server.members:
+            print(member)
+
+@bot.command(pass_context=True)
+@validation()
+async def listemotes(ctx):
+    for server in bot.servers:
+        for emoji in server.emojis:
+            print(emoji)
+
 bot.run(config.token)

@@ -3,6 +3,7 @@ from discord.ext import commands
 from config import Configuration
 from validation import validation
 import random
+import math
 
 config = Configuration()
 bot = commands.Bot(command_prefix=config.prefix)
@@ -48,12 +49,11 @@ async def presence(ctx, message):
     if message == 'stop':
         await bot.change_presence(game=None)
     else:
-        game = discord.Game(type=0, name=message)
         await bot.change_presence(game=discord.Game(name=message, status=None, afk=False))
 
 @bot.command(pass_context=True)
 @validation()
-async def joined(ctx, member : discord.Member):
+async def joined(ctx, member: discord.Member):
     await bot.say('{0.name} joined in {0.joined_at}'.format(member))
 
 @bot.command(pass_context=True)
@@ -81,5 +81,18 @@ async def flip(ctx):
         await bot.say('Heads')
     if coin == 2:
         await bot.say('Tails')
+
+@bot.command(pass_context=True)
+@validation()
+async def xp(ctx):
+    mesg = await bot.say('Calculating...')
+    counter = 0
+
+    async for msg in bot.logs_from(ctx.message.channel, limit=9999999):
+        if msg.author == ctx.message.author:
+            counter += 1
+
+    xp = math.ceil(counter * 0.5)
+    await bot.edit_message(mesg, '{} has {}xp.'.format(ctx.message.author.name, str(xp)))
 
 bot.run(config.token)

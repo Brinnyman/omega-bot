@@ -1,12 +1,11 @@
-import discord
 import configparser
 import os
-from discord.ext import commands
 from config import Configuration
 config = Configuration()
 
 path = os.path.dirname(os.path.abspath(__file__))
 config_file = path + '/config/permission.ini'
+
 
 class Permission:
 

@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 from config import Configuration
 from permission import Permission
@@ -11,7 +10,6 @@ def validation():
         userroles = ctx.message.author.roles
         command = ctx.message.content.split(' ', 1)[0][1:]
         validated = False
-
 
         if userid == config.ownerid:
             validated = True

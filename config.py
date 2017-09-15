@@ -4,6 +4,7 @@ import os
 path = os.path.dirname(os.path.abspath(__file__))
 config_file = path + '/config/config.ini'
 
+
 class Configuration():
     def __init__(self):
         config = configparser.ConfigParser()

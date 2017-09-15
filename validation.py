@@ -4,6 +4,7 @@ from permission import Permission
 config = Configuration()
 permit = Permission()
 
+
 def validation():
     def validate(ctx):
         userid = ctx.message.author.id

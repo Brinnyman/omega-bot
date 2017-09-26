@@ -73,7 +73,7 @@ async def userid(ctx):
 @bot.command(pass_context=True)
 @validation()
 async def presence(ctx, message):
-    await bot.delete_message(ctx.message)
+    # await bot.delete_message(ctx.message)
     if message == 'stop':
         await bot.change_presence(game=None)
     else:

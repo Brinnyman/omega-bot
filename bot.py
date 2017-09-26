@@ -45,7 +45,7 @@ async def ping(ctx):
     await bot.delete_message(ctx.message)
     msg = await bot.say('Pong!')
 
-    await asyncio.sleep(10)
+    await asyncio.sleep(5)
     await bot.delete_message(msg)
 
 
@@ -56,7 +56,7 @@ async def roleid(ctx, message):
     for i in ctx.message.server.roles:
         if message.capitalize() == i.name:
             msg = await bot.say(i.name + ' ' + i.id)
-            await asyncio.sleep(10)
+            await asyncio.sleep(5)
             await bot.delete_message(msg)
 
 
@@ -66,7 +66,7 @@ async def userid(ctx):
     await bot.delete_message(ctx.message)
     mentioned = ctx.message.mentions[0]
     msg = await bot.say(mentioned.name+' '+mentioned.id)
-    await asyncio.sleep(10)
+    await asyncio.sleep(5)
     await bot.delete_message(msg)
 
 
@@ -87,7 +87,7 @@ async def joined(ctx, member: discord.Member):
     joined = str(member.joined_at).split('.', 1)[0]
     msg = await bot.say('{0.name} joined in '.format(member) + joined)
 
-    await asyncio.sleep(10)
+    await asyncio.sleep(5)
     await bot.delete_message(msg)
 
 
@@ -110,7 +110,7 @@ async def color(ctx, message):
 
     msg = await bot.say('Changed your profile color to '+role_color+' !!')
 
-    await asyncio.sleep(10)
+    await asyncio.sleep(5)
     await bot.delete_message(msg)
 
 
@@ -120,15 +120,13 @@ async def flip(ctx):
     await bot.delete_message(ctx.message)
     coin = random.randint(1, 2)
     msg = await bot.say('Flipping a coin!!')
-    await asyncio.sleep(2)
-    await bot.delete_message(msg)
 
     if coin == 1:
-        msg2 = await bot.say('You flipped Heads!!')
+        msg2 = await bot.edit_message(msg, 'You flipped Heads!!')
     if coin == 2:
-        msg2 = await bot.say('You flipped Tails!!')
+        msg2 = await bot.edit_message(msg, 'You flipped Tails!!')
 
-    await asyncio.sleep(10)
+    await asyncio.sleep(5)
     await bot.delete_message(msg2)
 
 

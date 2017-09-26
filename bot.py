@@ -34,25 +34,46 @@ async def on_command_error(exception, context):
     else:
         msg = "inconnu... " + str(type(exception)) + str(exception)
         print(msg)
-    await bot.send_message(context.message.channel, msg)
+    msg1 = await bot.send_message(context.message.channel, msg)
+    await asyncio.sleep(5)
+    await bot.delete_message(msg1)
 
 
 @bot.command(pass_context=True)
 @validation()
 async def ping(ctx):
-    await bot.say('Pong!')
+    await bot.delete_message(ctx.message)
+    msg = await bot.say('Pong!')
+
+    await asyncio.sleep(10)
+    await bot.delete_message(msg)
 
 
 @bot.command(pass_context=True)
 @validation()
-async def roleid(ctx):
+async def roleid(ctx, message):
+    await bot.delete_message(ctx.message)
     for i in ctx.message.server.roles:
-        await bot.say(i.name + ' ' + i.id)
+        if message.capitalize() == i.name:
+            msg = await bot.say(i.name + ' ' + i.id)
+            await asyncio.sleep(10)
+            await bot.delete_message(msg)
+
+
+@bot.command(pass_context=True)
+@validation()
+async def userid(ctx):
+    await bot.delete_message(ctx.message)
+    mentioned = ctx.message.mentions[0]
+    msg = await bot.say(mentioned.name+' '+mentioned.id)
+    await asyncio.sleep(10)
+    await bot.delete_message(msg)
 
 
 @bot.command(pass_context=True)
 @validation()
 async def presence(ctx, message):
+    await bot.delete_message(ctx.message)
     if message == 'stop':
         await bot.change_presence(game=None)
     else:
@@ -62,12 +83,18 @@ async def presence(ctx, message):
 @bot.command(pass_context=True)
 @validation()
 async def joined(ctx, member: discord.Member):
-    await bot.say('{0.name} joined in {0.joined_at}'.format(member))
+    await bot.delete_message(ctx.message)
+    joined = str(member.joined_at).split('.', 1)[0]
+    msg = await bot.say('{0.name} joined in '.format(member) + joined)
+
+    await asyncio.sleep(10)
+    await bot.delete_message(msg)
 
 
 @bot.command(pass_context=True)
 @validation()
 async def color(ctx, message):
+    await bot.delete_message(ctx.message)
     role_color = int(message, 16)
     role = discord.utils.get(ctx.message.server.roles, name=ctx.message.author.name)
     if role is None:
@@ -81,16 +108,28 @@ async def color(ctx, message):
     elif role in ctx.message.server.roles:
         await bot.edit_role(ctx.message.server, role, colour=discord.Colour(role_color))
 
+    msg = await bot.say('Changed your profile color to '+role_color+' !!')
+
+    await asyncio.sleep(10)
+    await bot.delete_message(msg)
+
 
 @bot.command(pass_context=True)
 @validation()
 async def flip(ctx):
+    await bot.delete_message(ctx.message)
     coin = random.randint(1, 2)
-    await bot.say('Flipping a coin!!!')
+    msg = await bot.say('Flipping a coin!!')
+    await asyncio.sleep(2)
+    await bot.delete_message(msg)
+
     if coin == 1:
-        await bot.say('Heads')
+        msg2 = await bot.say('You flipped Heads!!')
     if coin == 2:
-        await bot.say('Tails')
+        msg2 = await bot.say('You flipped Tails!!')
+
+    await asyncio.sleep(10)
+    await bot.delete_message(msg2)
 
 
 @bot.command(pass_context=True)
@@ -119,6 +158,7 @@ async def getKarma(ctx):
 
 
 @bot.command(pass_context=True)
+@validation()
 async def profile(ctx):
     await bot.delete_message(ctx.message)
     mentioned = ctx.message.mentions[0]

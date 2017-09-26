@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from discord.ext import commands
 from config import Configuration
 from validation import validation
@@ -115,6 +116,65 @@ async def getKarma(ctx):
     karma = Karma()
     mentioned = ctx.message.mentions[0]
     await bot.say('{} has {}xp in the {} channel.'.format(mentioned.name, karma._check_score(mentioned), ctx.message.channel))
+
+
+@bot.command(pass_context=True)
+async def profile(ctx):
+    await bot.delete_message(ctx.message)
+    mentioned = ctx.message.mentions[0]
+
+    embed = discord.Embed(
+        color=mentioned.color,
+    )
+    embed.set_author(
+        name="User Info: " + mentioned.name + "#" + mentioned.discriminator,
+    )
+    embed.add_field(
+        name="ID",
+        value=mentioned.id,
+        inline=True
+    )
+    embed.add_field(
+        name="Nickname",
+        value=mentioned.display_name,
+        inline=True
+    )
+    embed.add_field(
+        name="Status",
+        value=mentioned.status,
+        inline=True
+    )
+    embed.add_field(
+        name="Playing",
+        value=mentioned.game,
+        inline=True
+    )
+    embed.add_field(
+        name="Role",
+        value=mentioned.top_role,
+        inline=True
+    )
+    embed.add_field(
+        name="Avatar",
+        value="[Full size](" + mentioned.avatar_url + ")",
+        inline=True
+    )
+    embed.add_field(
+        name="Account Created",
+        value=str(mentioned.created_at).split('.', 1)[0],
+        inline=True
+    )
+    embed.add_field(
+        name="Join Date",
+        value=str(mentioned.joined_at).split('.', 1)[0],
+        inline=True
+    )
+    embed.set_thumbnail(
+        url=mentioned.avatar_url
+    )
+    msg = await bot.say(embed=embed)
+    await asyncio.sleep(15)
+    await bot.delete_message(msg)
 
 
 bot.run(config.token)

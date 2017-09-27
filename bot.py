@@ -3,11 +3,11 @@ import asyncio
 from discord.ext import commands
 from config import Configuration
 from validation import validation
-from member import Member
+from experience import Experience
 import random
 
 config = Configuration()
-member = Member()
+experience = Experience()
 bot = commands.Bot(command_prefix=config.prefix)
 
 
@@ -158,6 +158,11 @@ async def profile(ctx):
         inline=True
     )
     embed.add_field(
+        name="Experience points",
+        value=experience.getxp(mentioned),
+        inline=True
+    )
+    embed.add_field(
         name="Account Created",
         value=str(mentioned.created_at).split('.', 1)[0],
         inline=True
@@ -175,34 +180,49 @@ async def profile(ctx):
 
 
 @bot.command(pass_context=True)
-async def givexp(ctx, message):
+async def givexp(ctx, amount):
     mentioned = ctx.message.mentions[0]
-    member.setxp(mentioned, message)
-    await bot.say('{} received {} experience!!'.format(mentioned.name, message))
+    experience.setxp(mentioned, amount)
+
+    embed = discord.Embed(
+        color=mentioned.color,
+    )
+    embed.set_author(
+        name=mentioned.name + '#' + mentioned.discriminator + ' received ' + amount + ' experience points!!',
+    )
+    msg = await bot.say(embed=embed)
+    await delete_message(5, ctx.message, msg)
 
 
 @bot.command(pass_context=True)
-async def removexp(ctx, message):
+async def removexp(ctx, amount):
     mentioned = ctx.message.mentions[0]
-    await bot.say('{} lost {} experience!!'.format(mentioned.name, message))
+    experience.removexp(mentioned, amount)
+
+    embed = discord.Embed(
+        color=mentioned.color,
+    )
+    embed.set_author(
+        name=mentioned.name + '#' + mentioned.discriminator + ' lost ' + amount + ' experience points!!',
+    )
+    msg = await bot.say(embed=embed)
+    await delete_message(5, ctx.message, msg)
 
 
 @bot.command(pass_context=True)
 async def showxp(ctx):
+    # mentioned = ctx.message.author
     mentioned = ctx.message.mentions[0]
-    await bot.say('{} has {} experience in channel {}'.format(mentioned.name, member.getxp(mentioned), ctx.message.channel))
 
-
-# @bot.command(pass_context=True)
-# async def calculatexp(ctx):
-#     oldxp = 0
-#     mentioned = ctx.message.mentions[0]
-#     async for msg in bot.logs_from(ctx.message.channel, limit=9999999):
-#         if msg.author == mentioned:
-#             oldxp += 1
-#
-#     member.checkxp(mentioned, oldxp)
-#     await bot.say('{} had {} experience in channel {}'.format(mentioned.name, oldxp, ctx.message.channel))
+    embed = discord.Embed(
+        color=mentioned.color,
+    )
+    embed.set_author(
+        # name='You currently have {} experience points in channel #{}'.format(member.getxp(mentioned), ctx.message.channel),
+        name='{} currently has {} experience points in channel #{}'.format(mentioned.name, experience.getxp(mentioned), ctx.message.channel),
+    )
+    msg = await bot.say(embed=embed)
+    await delete_message(5, ctx.message, msg)
 
 
 bot.run(config.token)

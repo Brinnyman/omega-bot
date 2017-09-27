@@ -55,23 +55,6 @@ async def ping(ctx):
 
 @bot.command(pass_context=True)
 @validation()
-async def roleid(ctx, message):
-    for i in ctx.message.server.roles:
-        if message.capitalize() == i.name:
-            msg = await bot.say(i.name + ' ' + i.id)
-            await delete_message(5, ctx.message, msg)
-
-
-@bot.command(pass_context=True)
-@validation()
-async def userid(ctx):
-    mentioned = ctx.message.mentions[0]
-    msg = await bot.say(mentioned.name+' '+mentioned.id)
-    await delete_message(5, ctx.message, msg)
-
-
-@bot.command(pass_context=True)
-@validation()
 async def presence(ctx, message):
     await bot.delete_message(ctx.message)
     if message == 'stop':

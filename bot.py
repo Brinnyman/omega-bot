@@ -109,9 +109,11 @@ async def flip(ctx):
 
     await asyncio.sleep(2)
     if coin == 1:
-        msg2 = await bot.edit_message(msg, 'You flipped Heads!!')
+        experience.setxp(ctx.message.author, 5)
+        msg2 = await bot.edit_message(msg, 'You flipped Heads and won 5 experience points!!')
     if coin == 2:
-        msg2 = await bot.edit_message(msg, 'You flipped Tails!!')
+        experience.removexp(ctx.message.author, 5)
+        msg2 = await bot.edit_message(msg, 'You flipped Tails and lost 5 experience points!!')
 
     await delete_message(5, ctx.message, msg2)
 

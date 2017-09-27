@@ -3,11 +3,11 @@ import asyncio
 from discord.ext import commands
 from config import Configuration
 from validation import validation
-from karma import Karma
+from member import Member
 import random
-import math
 
 config = Configuration()
+member = Member()
 bot = commands.Bot(command_prefix=config.prefix)
 
 
@@ -39,62 +39,51 @@ async def on_command_error(exception, context):
     await bot.delete_message(msg1)
 
 
+async def delete_message(time, invoke, response):
+    await asyncio.sleep(time)
+    await bot.delete_message(invoke)
+    await bot.delete_message(response)
+
+
+# mod commands
 @bot.command(pass_context=True)
 @validation()
 async def ping(ctx):
-    await bot.delete_message(ctx.message)
     msg = await bot.say('Pong!')
-
-    await asyncio.sleep(5)
-    await bot.delete_message(msg)
+    await delete_message(5, ctx.message, msg)
 
 
 @bot.command(pass_context=True)
 @validation()
 async def roleid(ctx, message):
-    await bot.delete_message(ctx.message)
     for i in ctx.message.server.roles:
         if message.capitalize() == i.name:
             msg = await bot.say(i.name + ' ' + i.id)
-            await asyncio.sleep(5)
-            await bot.delete_message(msg)
+            await delete_message(5, ctx.message, msg)
 
 
 @bot.command(pass_context=True)
 @validation()
 async def userid(ctx):
-    await bot.delete_message(ctx.message)
     mentioned = ctx.message.mentions[0]
     msg = await bot.say(mentioned.name+' '+mentioned.id)
-    await asyncio.sleep(5)
-    await bot.delete_message(msg)
+    await delete_message(5, ctx.message, msg)
 
 
 @bot.command(pass_context=True)
 @validation()
 async def presence(ctx, message):
-    # await bot.delete_message(ctx.message)
+    await bot.delete_message(ctx.message)
     if message == 'stop':
         await bot.change_presence(game=None)
     else:
         await bot.change_presence(game=discord.Game(name=message, status=None, afk=False))
 
 
-@bot.command(pass_context=True)
-@validation()
-async def joined(ctx, member: discord.Member):
-    await bot.delete_message(ctx.message)
-    joined = str(member.joined_at).split('.', 1)[0]
-    msg = await bot.say('{0.name} joined in '.format(member) + joined)
-
-    await asyncio.sleep(5)
-    await bot.delete_message(msg)
-
-
+# member commands
 @bot.command(pass_context=True)
 @validation()
 async def color(ctx, message):
-    await bot.delete_message(ctx.message)
     role_color = int(message, 16)
     role = discord.utils.get(ctx.message.server.roles, name=ctx.message.author.name)
     if role is None:
@@ -108,57 +97,28 @@ async def color(ctx, message):
     elif role in ctx.message.server.roles:
         await bot.edit_role(ctx.message.server, role, colour=discord.Colour(role_color))
 
-    msg = await bot.say('Changed your profile color to '+role_color+' !!')
-
-    await asyncio.sleep(5)
-    await bot.delete_message(msg)
+    msg = await bot.say('Changed your profile color to '+message+' !!')
+    await delete_message(5, ctx.message, msg)
 
 
 @bot.command(pass_context=True)
 @validation()
 async def flip(ctx):
-    await bot.delete_message(ctx.message)
     coin = random.randint(1, 2)
     msg = await bot.say('Flipping a coin!!')
 
+    await asyncio.sleep(2)
     if coin == 1:
         msg2 = await bot.edit_message(msg, 'You flipped Heads!!')
     if coin == 2:
         msg2 = await bot.edit_message(msg, 'You flipped Tails!!')
 
-    await asyncio.sleep(5)
-    await bot.delete_message(msg2)
-
-
-@bot.command(pass_context=True)
-@validation()
-async def givexp(ctx):
-    counter = 0
-    mentioned = ctx.message.mentions[0]
-
-    async for msg in bot.logs_from(ctx.message.channel, limit=9999999):
-        if msg.author == mentioned:
-            counter += 1
-
-    # mesg = await bot.say('Calculating...')
-    modifier = 1.5
-    xp = math.ceil(counter * modifier)
-    karma = Karma()
-    karma._process_scores(mentioned, xp)
-    # await bot.edit_message(mesg, '{} has {}xp in the {} channel.'.format(mentioned.name, karma._check_score(mentioned), ctx.message.channel))
-
-
-@bot.command(pass_context=True)
-async def getKarma(ctx):
-    karma = Karma()
-    mentioned = ctx.message.mentions[0]
-    await bot.say('{} has {}xp in the {} channel.'.format(mentioned.name, karma._check_score(mentioned), ctx.message.channel))
+    await delete_message(5, ctx.message, msg2)
 
 
 @bot.command(pass_context=True)
 @validation()
 async def profile(ctx):
-    await bot.delete_message(ctx.message)
     mentioned = ctx.message.mentions[0]
 
     embed = discord.Embed(
@@ -211,8 +171,38 @@ async def profile(ctx):
         url=mentioned.avatar_url
     )
     msg = await bot.say(embed=embed)
-    await asyncio.sleep(15)
-    await bot.delete_message(msg)
+    await delete_message(15, ctx.message, msg)
+
+
+@bot.command(pass_context=True)
+async def givexp(ctx, message):
+    mentioned = ctx.message.mentions[0]
+    member.setxp(mentioned, message)
+    await bot.say('{} received {} experience!!'.format(mentioned.name, message))
+
+
+@bot.command(pass_context=True)
+async def removexp(ctx, message):
+    mentioned = ctx.message.mentions[0]
+    await bot.say('{} lost {} experience!!'.format(mentioned.name, message))
+
+
+@bot.command(pass_context=True)
+async def showxp(ctx):
+    mentioned = ctx.message.mentions[0]
+    await bot.say('{} has {} experience in channel {}'.format(mentioned.name, member.getxp(mentioned), ctx.message.channel))
+
+
+# @bot.command(pass_context=True)
+# async def calculatexp(ctx):
+#     oldxp = 0
+#     mentioned = ctx.message.mentions[0]
+#     async for msg in bot.logs_from(ctx.message.channel, limit=9999999):
+#         if msg.author == mentioned:
+#             oldxp += 1
+#
+#     member.checkxp(mentioned, oldxp)
+#     await bot.say('{} had {} experience in channel {}'.format(mentioned.name, oldxp, ctx.message.channel))
 
 
 bot.run(config.token)

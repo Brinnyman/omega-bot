@@ -1,27 +1,41 @@
-class Experience:
-    def __init__(self):
-        self.user = {
-            'userid': '98846938123751424',
-            'xp': 96,
-        }
+from tinydb import TinyDB
+from tinydb import where
+import os
 
+path = os.path.dirname(os.path.abspath(__file__))
+db_file = path + '/config/db.json'
+db = TinyDB(db_file)
+
+
+class Experience:
     def getxp(self, user):
         self.userid = user.id
-        if self.userid == self.user['userid']:
-            return self.user['xp']
+        if db.search(where('userid') == self.userid):
+            for data in db.search(where('userid') == self.userid):
+                print(data['xp'])
+                return data['xp']
+        else:
+            db.insert({'userid': self.userid, 'xp': 0})
+            return 0
 
     def setxp(self, user, xp):
         self.userid = user.id
         self.userxp = int(xp)
-
-        if self.userid == self.user['userid']:
-            if self.userxp != self.getxp(user):
-                self.user['xp'] += self.userxp
+        if db.search(where('userid') == self.userid):
+            for data in db.search(where('userid') == self.userid):
+                self.userxp += data['xp']
+                print(self.userxp)
+                db.update({'xp': self.userxp}, where('userid') == self.userid)
+        else:
+            db.insert({'userid': self.userid, 'xp': self.userxp})
 
     def removexp(self, user, xp):
         self.userid = user.id
         self.userxp = int(xp)
-
-        if self.userid == self.user['userid']:
-            if self.userxp != self.getxp(user):
-                self.user['xp'] -= self.userxp
+        if db.search(where('userid') == self.userid):
+            for data in db.search(where('userid') == self.userid):
+                data['xp'] -= self.userxp
+                print(data['xp'])
+                db.update({'xp': data['xp']}, where('userid') == self.userid)
+        else:
+            db.insert({'userid': self.userid, 'xp': self.userxp})

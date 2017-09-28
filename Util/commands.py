@@ -68,11 +68,13 @@ async def flip(client, author, message):
     Embed.set_author(name=author.name, icon_url=author.avatar_url)
 
     if coin == 1:
-        msg = 'You flipped Heads'
+        msg = 'You flipped Heads and received 5 experience points!! '
+        experience.setxp(author, 5)
         Embed = discord.Embed(description=msg, colour=0x42eef4, title="")
         Embed.set_author(name=author.name, icon_url=author.avatar_url)
     if coin == 2:
-        msg = 'You flipped tails'
+        msg = 'You flipped tails and lost 5 experience points!!'
+        experience.removexp(author, 5)
         Embed = discord.Embed(description=msg, colour=0x42eef4, title="")
         Embed.set_author(name=author.name, icon_url=author.avatar_url)
     print(Embed.to_dict())
@@ -122,7 +124,7 @@ async def profile(client, author, message):
     )
     Embed.add_field(
         name="Experience points",
-        value='100',
+        value=experience.getxp(mentioned),
         inline=True
     )
     Embed.add_field(

@@ -1,9 +1,9 @@
 import configparser
 import os
-from config import Configuration
+from .config import Configuration
 config = Configuration()
 
-path = os.path.dirname(os.path.abspath(__file__))
+path = os.getcwd()
 config_file = path + '/config/permission.ini'
 
 

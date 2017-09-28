@@ -1,14 +1,13 @@
 import discord
 import asyncio
 from discord.ext import commands
-from config import Configuration
-import Commands
+from Util.config import Configuration
+import Util.commands as Commands
 
 # from validation import validation
 # @validation()
 # msg = await bot.say(embed=embed)
 # await delete_message(5, ctx.message, msg)
-
 config = Configuration()
 bot = commands.Bot(command_prefix=config.prefix)
 

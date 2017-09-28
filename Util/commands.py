@@ -1,6 +1,6 @@
 import discord
 import random
-from experience import Experience
+from .experience import Experience
 experience = Experience()
 
 

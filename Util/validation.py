@@ -1,6 +1,6 @@
 from discord.ext import commands
-from config import Configuration
-from permission import Permission
+from .config import Configuration
+from .permission import Permission
 config = Configuration()
 permit = Permission()
 

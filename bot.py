@@ -1,8 +1,8 @@
 import discord
 import asyncio
 from discord.ext import commands
-from Util.config import Configuration
-import Util.commands as Commands
+from util.config import Configuration
+import util.commands as Commands
 # msg = await bot.say(embed=embed)
 # await delete_message(5, ctx.message, msg)
 config = Configuration()

@@ -1,8 +1,8 @@
 import configparser
 import os
 
-path = os.getcwd()
-config_file = path + '/config/config.ini'
+path = os.path.abspath('')
+config_file = os.path.join(path, 'config', 'config.ini')
 
 
 class Configuration():

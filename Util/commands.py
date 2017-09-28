@@ -17,13 +17,16 @@ def validation():
             command = message.content.split(' ', 1)[0][1:]
             print(author.name, command)
             if author.id == config.ownerid:
+                print('val_owner', message)
                 return await function(*args)
             else:
                 for i in author.roles:
                     if i.id in config.permitted:
                         if permit.check_command(i.name, command):
+                            print('val_owner', message)
                             return await function(*args)
                         else:
+                            print('no permission')
                             return await client.send_message(message.channel, 'You dont have the right permission!!')
         return wrapper
     return decorator
@@ -34,6 +37,7 @@ def embed_command():
         async def wrapper(*args):
             client = args[0]
             message = args[2]
+            print('embedcom', message)
             embed = await function(*args)
             await client.send_message(message.channel, embed=embed)
         return wrapper
@@ -44,6 +48,7 @@ def embed_command():
 @embed_command()
 async def ping(client, author, message):
     msg = 'Pong!'
+    print('pingcommand', message)
     Embed = discord.Embed(description=msg, colour=0x42eef4, title="")
     Embed.set_author(name=author.name, icon_url=author.avatar_url)
     print(Embed.to_dict())

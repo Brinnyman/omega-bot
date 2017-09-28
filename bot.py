@@ -3,8 +3,6 @@ import asyncio
 from discord.ext import commands
 from util.config import Configuration
 import util.commands as Commands
-# msg = await bot.say(embed=embed)
-# await delete_message(5, ctx.message, msg)
 config = Configuration()
 bot = commands.Bot(command_prefix=config.prefix)
 
@@ -39,14 +37,14 @@ async def on_command_error(exception, context):
 
 
 command_list = {
-    "!ping": Commands.ping,
-    "!presence": Commands.presence,
-    "!flip": Commands.flip,
-    "!profile": Commands.profile,
-    "!color": Commands.color,
-    "!showxp": Commands.showxp,
-    "!givexp": Commands.givexp,
-    "!removexp": Commands.removexp
+    "?ping": Commands.ping,
+    "?presence": Commands.presence,
+    "?flip": Commands.flip,
+    "?profile": Commands.profile,
+    "?color": Commands.color,
+    "?showxp": Commands.showxp,
+    "?givexp": Commands.givexp,
+    "?removexp": Commands.removexp
     }
 
 

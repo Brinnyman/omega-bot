@@ -3,8 +3,8 @@ import os
 from .config import Configuration
 config = Configuration()
 
-path = os.getcwd()
-config_file = path + '/config/permission.ini'
+path = os.path.abspath('')
+config_file = os.path.join(path, 'config', 'permission.ini')
 
 
 class Permission:

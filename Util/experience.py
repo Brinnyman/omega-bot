@@ -2,8 +2,8 @@ from tinydb import TinyDB
 from tinydb import where
 import os
 
-path = os.getcwd()
-db_file = path + '/config/db.json'
+path = os.path.abspath('')
+db_file = os.path.join(path, 'config', 'db.json')
 db = TinyDB(db_file)
 
 

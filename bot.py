@@ -3,9 +3,6 @@ import asyncio
 from discord.ext import commands
 from Util.config import Configuration
 import Util.commands as Commands
-
-# from validation import validation
-# @validation()
 # msg = await bot.say(embed=embed)
 # await delete_message(5, ctx.message, msg)
 config = Configuration()

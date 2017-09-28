@@ -1,7 +1,32 @@
 import discord
 import random
+from .config import Configuration
+from .permission import Permission
 from .experience import Experience
+config = Configuration()
+permit = Permission()
 experience = Experience()
+
+
+def validation():
+    def decorator(function):
+        async def wrapper(*args):
+            client = args[0]
+            author = args[1]
+            message = args[2]
+            command = message.content.split(' ', 1)[0][1:]
+            print(author.name, command)
+            if author.id == config.ownerid:
+                return await function(*args)
+            else:
+                for i in author.roles:
+                    if i.id in config.permitted:
+                        if permit.check_command(i.name, command):
+                            return await function(*args)
+                        else:
+                            return await client.send_message(message.channel, 'You dont have the right permission!!')
+        return wrapper
+    return decorator
 
 
 def embed_command():
@@ -15,6 +40,7 @@ def embed_command():
     return decorator
 
 
+@validation()
 @embed_command()
 async def ping(client, author, message):
     msg = 'Pong!'
@@ -24,6 +50,7 @@ async def ping(client, author, message):
     return Embed
 
 
+@validation()
 async def presence(client, author, message):
     state = message.content.split(' ', 1)[-1]
     if state == message.content:
@@ -32,6 +59,7 @@ async def presence(client, author, message):
         await client.change_presence(game=discord.Game(name=state, status=None, afk=False))
 
 
+@validation()
 @embed_command()
 async def flip(client, author, message):
     coin = random.randint(1, 2)
@@ -51,6 +79,7 @@ async def flip(client, author, message):
     return Embed
 
 
+@validation()
 @embed_command()
 async def profile(client, author, message):
     mentioned = message.mentions[0]
@@ -113,6 +142,7 @@ async def profile(client, author, message):
     return Embed
 
 
+@validation()
 @embed_command()
 async def color(client, author, message):
     role_color = message.content.split(' ', 1)[-1]
@@ -136,6 +166,7 @@ async def color(client, author, message):
     return Embed
 
 
+@validation()
 @embed_command()
 async def showxp(client, author, message):
     mentioned = message.mentions[0]
@@ -146,6 +177,7 @@ async def showxp(client, author, message):
     return Embed
 
 
+@validation()
 @embed_command()
 async def givexp(client, author, message):
     mentioned = message.mentions[0]
@@ -158,6 +190,7 @@ async def givexp(client, author, message):
     return Embed
 
 
+@validation()
 @embed_command()
 async def removexp(client, author, message):
     mentioned = message.mentions[0]

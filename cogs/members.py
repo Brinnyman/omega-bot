@@ -1,4 +1,5 @@
 import discord
+import asyncio
 import random
 from discord.ext import commands
 from .experience import Experience
@@ -14,7 +15,10 @@ class Members():
         """Says when a member joined."""
         msg = '{0.name} joined in {0.joined_at}'.format(member)
         Embed = discord.Embed(description=msg, colour=0x42eef4)
-        await self.bot.send_message(ctx.message.channel, embed=Embed)
+        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        await asyncio.sleep(5)
+        await self.bot.delete_message(message)
+        await self.bot.delete_message(ctx.message)
 
     @commands.command(pass_context=True)
     async def profile(self, ctx, member: discord.Member):
@@ -75,7 +79,10 @@ class Members():
         Embed.set_thumbnail(
             url=mentioned.avatar_url
         )
-        await self.bot.send_message(ctx.message.channel, embed=Embed)
+        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        await asyncio.sleep(10)
+        await self.bot.delete_message(message)
+        await self.bot.delete_message(ctx.message)
 
     @commands.command(pass_context=True)
     async def color(self, ctx, color: str):
@@ -97,29 +104,45 @@ class Members():
 
         msg = 'Changed {}\'s nickname color to '+str(role_color)+' !!'.format(author.name)
         Embed = discord.Embed(description=msg, colour=0x42f4a1)
-        await self.bot.send_message(ctx.message.channel, embed=Embed)
+        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        await asyncio.sleep(5)
+        await self.bot.delete_message(message)
+        await self.bot.delete_message(ctx.message)
 
+# TODO: maybe use this try exception methode with every command, custom error message
     @commands.command(pass_context=True)
     async def roll(self, ctx, dice: str):
         """Rolls a dice in NdN format."""
-        try:
-            rolls, limit = map(int, dice.split('d'))
-            msg = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
-            Embed = discord.Embed(description=msg, colour=0x42eef4)
-            print(Embed.to_dict())
-            await self.bot.send_message(ctx.message.channel, embed=Embed)
-        except Exception:
-            msg = 'Format has to be in NdN!'
-            Embed = discord.Embed(description=msg, colour=0x42eef4)
-            await self.bot.send_message(ctx.message.channel, embed=Embed)
-            return
+        rolls, limit = map(int, dice.split('d'))
+        msg = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+        Embed = discord.Embed(description=msg, colour=0x42eef4)
+        print(Embed.to_dict())
+        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        await asyncio.sleep(5)
+        await self.bot.delete_message(message)
+        await self.bot.delete_message(ctx.message)
+
+        # try:
+        #     rolls, limit = map(int, dice.split('d'))
+        #     msg = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+        #     Embed = discord.Embed(description=msg, colour=0x42eef4)
+        #     print(Embed.to_dict())
+        #     await self.bot.send_message(ctx.message.channel, embed=Embed)
+        # except Exception:
+        #     msg = 'Format has to be in NdN!'
+        #     Embed = discord.Embed(description=msg, colour=0x42eef4)
+        #     await self.bot.send_message(ctx.message.channel, embed=Embed)
+        #     return
 
     @commands.command(pass_context=True)
     async def choose(self, ctx, *choices: str):
         """Chooses between multiple choices."""
         msg = random.choice(choices)
         Embed = discord.Embed(description=msg, colour=0x42eef4)
-        await self.bot.send_message(ctx.message.channel, embed=Embed)
+        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        await asyncio.sleep(5)
+        await self.bot.delete_message(message)
+        await self.bot.delete_message(ctx.message)
 
     @commands.command(pass_context=True)
     async def flip(self, ctx):
@@ -136,7 +159,10 @@ class Members():
         if coin == 2:
             msg = '{} flipped tails and lost 5 experience points!!'.format(author.name)
             Embed = discord.Embed(description=msg, colour=0x42f4a1)
-        await self.bot.send_message(ctx.message.channel, embed=Embed)
+        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        await asyncio.sleep(5)
+        await self.bot.delete_message(message)
+        await self.bot.delete_message(ctx.message)
 
 
 def setup(bot):

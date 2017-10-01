@@ -12,7 +12,6 @@ class Experience:
         self.userid = user.id
         if db.search(where('userid') == self.userid):
             for data in db.search(where('userid') == self.userid):
-                print(data['xp'])
                 return data['xp']
         else:
             db.insert({'userid': self.userid, 'xp': 0})
@@ -24,7 +23,6 @@ class Experience:
         if db.search(where('userid') == self.userid):
             for data in db.search(where('userid') == self.userid):
                 self.userxp += data['xp']
-                print(self.userxp)
                 db.update({'xp': self.userxp}, where('userid') == self.userid)
         else:
             db.insert({'userid': self.userid, 'xp': self.userxp})
@@ -35,7 +33,6 @@ class Experience:
         if db.search(where('userid') == self.userid):
             for data in db.search(where('userid') == self.userid):
                 data['xp'] -= self.userxp
-                print(data['xp'])
                 db.update({'xp': data['xp']}, where('userid') == self.userid)
         else:
             db.insert({'userid': self.userid, 'xp': self.userxp})

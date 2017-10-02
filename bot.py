@@ -1,14 +1,13 @@
 import discord
+import asyncio
 from discord.ext import commands
 from cogs.config import Configuration
 from cogs.permission import Permission
 config = Configuration()
 permit = Permission()
-client = discord.Client()
 
 description = '''Omega chat bot'''
-startup_extensions = ["members", "moderator"]
-
+startup_extensions = ["members", "moderator", "help"]
 bot = commands.Bot(command_prefix=config.prefix, description=description)
 
 
@@ -18,6 +17,7 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('------')
+    await bot.change_presence(game=discord.Game(name='observing...', status=None, afk=False))
 
 
 @bot.event
@@ -43,7 +43,10 @@ async def on_command_error(exception, context):
     else:
         print("inconnu... " + str(type(exception)) + str(exception))
 
-    await bot.send_message(context.message.channel, "```py\n{}\n```".format(msg))
+    message = await bot.send_message(context.message.channel, "```py\n{}\n```".format(msg))
+    await asyncio.sleep(5)
+    await bot.delete_message(message)
+    await bot.delete_message(context.message)
 
 
 if __name__ == "__main__":

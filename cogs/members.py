@@ -24,6 +24,9 @@ class Members():
     async def profile(self, ctx, member: discord.Member):
         """Displays a members' profile."""
         mentioned = member
+        roles = str([r.name for r in member.roles if '@everyone' and mentioned.name not in r.name]).strip('[]').replace(', ', '\n').replace("'", '')
+        if roles is '':
+            roles = 'Member has no assigned roles.'
 
         Embed = discord.Embed(
             color=0x42f4a1,
@@ -53,7 +56,7 @@ class Members():
         )
         Embed.add_field(
             name="Role",
-            value=mentioned.top_role,
+            value=roles,
             inline=True
         )
         Embed.add_field(

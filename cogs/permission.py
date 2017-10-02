@@ -1,3 +1,4 @@
+from discord.ext import commands
 import configparser
 import os
 from .config import Configuration
@@ -41,16 +42,20 @@ class Permission:
 
         return whitelist
 
-    def check_command(self, author, command):
-        has_permission = False
-        if(author.id == config.ownerid):
-            has_permission = True
-        else:
-            for i in author.roles:
-                if i.id in config.permitted:
-                    whitelist = self.create_whitelist(i.name)
-                    for i in whitelist:
-                        if command in i:
-                            has_permission = True
+    def check(self):
+        def predicate(ctx):
+            has_permission = False
+            author = ctx.message.author
+            command = ctx.message.content.split(' ', 1)[0][1:]
+            if(author.id == config.ownerid):
+                has_permission = True
+            else:
+                for i in author.roles:
+                    if i.id in config.permitted:
+                        whitelist = self.create_whitelist(i.name)
+                        for i in whitelist:
+                            if command in i:
+                                has_permission = True
 
-        return has_permission
+            return has_permission
+        return commands.check(predicate)

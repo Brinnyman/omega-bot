@@ -14,10 +14,10 @@ class Members():
     async def joined(self, ctx, member: discord.Member):
         """Says when a member joined."""
         msg = '{0.name} joined in {0.joined_at}'.format(member)
-        Embed = discord.Embed(description=msg, colour=0x42eef4)
-        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        Embed = discord.Embed(description=msg, color=0x42f4a1)
+        Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+        await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
-        await self.bot.delete_message(message)
         await self.bot.delete_message(ctx.message)
 
     @commands.command(pass_context=True)
@@ -82,9 +82,9 @@ class Members():
         Embed.set_thumbnail(
             url=mentioned.avatar_url
         )
-        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+        await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(10)
-        await self.bot.delete_message(message)
         await self.bot.delete_message(ctx.message)
 
     @commands.command(pass_context=True)
@@ -107,9 +107,9 @@ class Members():
 
         msg = 'Changed {}\'s nickname color to '+str(role_color)+' !!'.format(author.name)
         Embed = discord.Embed(description=msg, colour=0x42f4a1)
-        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+        await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
-        await self.bot.delete_message(message)
         await self.bot.delete_message(ctx.message)
 
 # TODO: maybe use this try exception methode with every command, custom error message
@@ -119,10 +119,9 @@ class Members():
         rolls, limit = map(int, dice.split('d'))
         msg = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
         Embed = discord.Embed(description=msg, colour=0x42eef4)
-        print(Embed.to_dict())
-        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+        await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
-        await self.bot.delete_message(message)
         await self.bot.delete_message(ctx.message)
 
         # try:
@@ -142,9 +141,9 @@ class Members():
         """Chooses between multiple choices."""
         msg = random.choice(choices)
         Embed = discord.Embed(description=msg, colour=0x42eef4)
-        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+        await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
-        await self.bot.delete_message(message)
         await self.bot.delete_message(ctx.message)
 
     @commands.command(pass_context=True)
@@ -152,19 +151,14 @@ class Members():
         """Flips a coin."""
         author = ctx.message.author
         coin = random.randint(1, 2)
-        msg = 'Flipping a coin!!'
-        Embed = discord.Embed(description=msg, colour=0x42f4a1)
-        Embed.set_author(name=author.name, icon_url=author.avatar_url)
-
         if coin == 1:
             msg = '{} flipped Heads and received 5 experience points!!'.format(author.name)
             Embed = discord.Embed(description=msg, colour=0x42f4a1)
         if coin == 2:
             msg = '{} flipped tails and lost 5 experience points!!'.format(author.name)
             Embed = discord.Embed(description=msg, colour=0x42f4a1)
-        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+        await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
-        await self.bot.delete_message(message)
         await self.bot.delete_message(ctx.message)
 
 

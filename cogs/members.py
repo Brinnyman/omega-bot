@@ -107,7 +107,6 @@ class Members():
 
         msg = 'Changed {}\'s nickname color to '+str(role_color)+' !!'.format(author.name)
         Embed = discord.Embed(description=msg, colour=0x42f4a1)
-        Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
         await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
         await self.bot.delete_message(ctx.message)
@@ -117,7 +116,7 @@ class Members():
     async def roll(self, ctx, dice: str):
         """Rolls a dice in NdN format."""
         rolls, limit = map(int, dice.split('d'))
-        msg = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+        msg = ctx.message.author.name + ' rolled: ' + dice + ' and got ' +', '.join(str(random.randint(1, limit)) for r in range(rolls))
         Embed = discord.Embed(description=msg, colour=0x42eef4)
         Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
         await self.bot.send_message(ctx.message.channel, embed=Embed)
@@ -140,7 +139,7 @@ class Members():
     async def choose(self, ctx, *choice: str):
         """Chooses between multiple choices."""
         choices = str([i for i in choice]).strip('[]').replace("'", '')
-        msg = self.bot.user.name + ' chose: ' + random.choice(choice) + '\nfrom the following choices: ' + choices
+        msg = self.bot.user.name + ' chose: ' + random.choice(choice) + '\nFrom the following choices: ' + choices
         Embed = discord.Embed(description=msg, colour=0x42eef4)
         Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
         await self.bot.send_message(ctx.message.channel, embed=Embed)

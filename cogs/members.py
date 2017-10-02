@@ -137,9 +137,10 @@ class Members():
         #     return
 
     @commands.command(pass_context=True)
-    async def choose(self, ctx, *choices: str):
+    async def choose(self, ctx, *choice: str):
         """Chooses between multiple choices."""
-        msg = random.choice(choices)
+        choices = str([i for i in choice]).strip('[]').replace("'", '')
+        msg = self.bot.user.name + ' chose: ' + random.choice(choice) + '\nfrom the following choices: ' + choices
         Embed = discord.Embed(description=msg, colour=0x42eef4)
         Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
         await self.bot.send_message(ctx.message.channel, embed=Embed)

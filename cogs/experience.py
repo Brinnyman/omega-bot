@@ -32,7 +32,26 @@ class Experience:
         self.userxp = int(xp)
         if db.search(where('userid') == self.userid):
             for data in db.search(where('userid') == self.userid):
-                data['xp'] -= self.userxp
+                if data['xp'] - self.userxp < 0:
+                    data['xp'] = 0
+                    print('less then 0')
+                else:
+                    data['xp'] -= self.userxp
+                    print('is higher then 0')
+
                 db.update({'xp': data['xp']}, where('userid') == self.userid)
         else:
             db.insert({'userid': self.userid, 'xp': self.userxp})
+
+    def getrank(self, user):
+        xp = self.getxp(user)
+        rank = ''
+
+        if xp == 0:
+            rank = 'Pleb'
+        elif xp <= 50:
+            rank = 'Alpha'
+        elif xp >= 50:
+            rank = 'King'
+
+        return rank

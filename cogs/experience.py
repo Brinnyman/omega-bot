@@ -47,11 +47,11 @@ class Experience:
         xp = self.getxp(user)
         rank = ''
 
-        if xp == 0:
-            rank = 'Pleb'
-        elif xp <= 50:
-            rank = 'Alpha'
+        if xp >= 100:
+            rank = 'Kings'
         elif xp >= 50:
-            rank = 'King'
+            rank = 'Alpha'
+        elif xp >= 0:
+            rank = 'Pleb'
 
         return rank

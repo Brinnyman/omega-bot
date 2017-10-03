@@ -162,6 +162,16 @@ class Members():
         await asyncio.sleep(5)
         await self.bot.delete_message(ctx.message)
 
+    @commands.command(pass_context=True)
+    async def jump(self, ctx):
+        """Join rusty."""
+        msg = ctx.message.author.name + ' jumped and joined Rusty'
+        Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
+        Embed.set_image(url='https://cdn.discordapp.com/attachments/355869544113373184/356221955109814273/YouEvenStarcraft2.png')
+        await self.bot.send_message(ctx.message.channel, embed=Embed)
+        await asyncio.sleep(5)
+        await self.bot.delete_message(ctx.message)
+
 
 def setup(bot):
     bot.add_cog(Members(bot))

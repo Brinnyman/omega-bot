@@ -14,7 +14,7 @@ class Moderator():
     async def ping(self, ctx):
         """Sends a ping to the bot"""
         msg = 'Pong!'
-        Embed = discord.Embed(description=msg, colour=0x42f4a1)
+        Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
         message = await self.bot.send_message(ctx.message.channel, embed=Embed)
 
         await asyncio.sleep(5)

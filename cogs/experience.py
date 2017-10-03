@@ -48,7 +48,7 @@ class Experience:
         rank = ''
 
         if xp >= 100:
-            rank = 'Kings'
+            rank = 'King'
         elif xp >= 50:
             rank = 'Alpha'
         elif xp >= 0:

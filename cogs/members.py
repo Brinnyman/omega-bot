@@ -14,7 +14,7 @@ class Members():
     async def joined(self, ctx, member: discord.Member):
         """Says when a member joined."""
         msg = '{0.name} joined in {0.joined_at}'.format(member)
-        Embed = discord.Embed(description=msg, color=0x42f4a1)
+        Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
         Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
         await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
@@ -24,12 +24,12 @@ class Members():
     async def profile(self, ctx, member: discord.Member):
         """Displays a members' profile."""
         mentioned = member
-        roles = str([r.name for r in member.roles if '@everyone' and mentioned.name not in r.name]).strip('[]').replace(', ', '\n').replace("'", '')
+        roles = str([r.name for r in member.roles if '@everyone' not in r.name]).strip('[]').replace(', ', '\n').replace("'", '')
         if roles is '':
             roles = 'Member has no assigned roles.'
 
         Embed = discord.Embed(
-            color=0x42f4a1,
+            color=ctx.message.server.me.color
         )
         Embed.set_author(
             name="Member Info: " + mentioned.name + "#" + mentioned.discriminator,
@@ -70,6 +70,11 @@ class Members():
             inline=True
         )
         Embed.add_field(
+            name="Rank",
+            value=experience.getrank(mentioned),
+            inline=True
+        )
+        Embed.add_field(
             name="Account Created",
             value=str(mentioned.created_at).split('.', 1)[0],
             inline=True
@@ -106,7 +111,7 @@ class Members():
             await self.bot.edit_role(ctx.message.server, role, colour=discord.Colour(role_colorint))
 
         msg = 'Changed {}\'s nickname color to '+str(role_color)+' !!'.format(author.name)
-        Embed = discord.Embed(description=msg, colour=0x42f4a1)
+        Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
         await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
         await self.bot.delete_message(ctx.message)
@@ -115,32 +120,28 @@ class Members():
     @commands.command(pass_context=True)
     async def roll(self, ctx, dice: str):
         """Rolls a dice in NdN format."""
-        rolls, limit = map(int, dice.split('d'))
-        msg = ctx.message.author.name + ' rolled: ' + dice + ' and got ' + ', '.join(str(random.randint(1, limit)) for r in range(rolls))
-        Embed = discord.Embed(description=msg, colour=0x42eef4)
-        Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
-        await self.bot.send_message(ctx.message.channel, embed=Embed)
+        try:
+            rolls, limit = map(int, dice.split('d'))
+            msg = ctx.message.author.name + ' rolled: ' + dice + ' and got ' + ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+            Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
+            Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+            await self.bot.send_message(ctx.message.channel, embed=Embed)
+        except Exception:
+            msg = 'Format has to be in NdN!'
+            Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
+            message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+            await asyncio.sleep(5)
+            await self.bot.delete_message(message)
+
         await asyncio.sleep(5)
         await self.bot.delete_message(ctx.message)
-
-        # try:
-        #     rolls, limit = map(int, dice.split('d'))
-        #     msg = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
-        #     Embed = discord.Embed(description=msg, colour=0x42eef4)
-        #     print(Embed.to_dict())
-        #     await self.bot.send_message(ctx.message.channel, embed=Embed)
-        # except Exception:
-        #     msg = 'Format has to be in NdN!'
-        #     Embed = discord.Embed(description=msg, colour=0x42eef4)
-        #     await self.bot.send_message(ctx.message.channel, embed=Embed)
-        #     return
 
     @commands.command(pass_context=True)
     async def choose(self, ctx, *choice: str):
         """Chooses between multiple choices."""
         choices = str([i for i in choice]).strip('[]').replace("'", '')
         msg = self.bot.user.name + ' chose: ' + random.choice(choice) + '\nFrom the following choices: ' + choices
-        Embed = discord.Embed(description=msg, colour=0x42eef4)
+        Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
         Embed.set_footer(text='Invoked by: ' + ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
         await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
@@ -153,10 +154,10 @@ class Members():
         coin = random.randint(1, 2)
         if coin == 1:
             msg = '{} flipped Heads and received 5 experience points!!'.format(author.name)
-            Embed = discord.Embed(description=msg, colour=0x42f4a1)
+            Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
         if coin == 2:
             msg = '{} flipped tails and lost 5 experience points!!'.format(author.name)
-            Embed = discord.Embed(description=msg, colour=0x42f4a1)
+            Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
         await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
         await self.bot.delete_message(ctx.message)

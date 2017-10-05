@@ -65,7 +65,7 @@ class Members():
             inline=True
         )
         Embed.add_field(
-            name="Experience points",
+            name="Rusty points",
             value=experience.getxp(mentioned),
             inline=True
         )
@@ -153,10 +153,12 @@ class Members():
         author = ctx.message.author
         coin = random.randint(1, 2)
         if coin == 1:
-            msg = '{} flipped Heads and received 5 experience points!!'.format(author.name)
+            experience.setxp(author, 5)
+            msg = '{} flipped Heads and received 5 rusty points!!'.format(author.name)
             Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
         if coin == 2:
-            msg = '{} flipped tails and lost 5 experience points!!'.format(author.name)
+            experience.removexp(author, 2)
+            msg = '{} flipped tails and lost 2 rusty points!!'.format(author.name)
             Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
         await self.bot.send_message(ctx.message.channel, embed=Embed)
         await asyncio.sleep(5)
@@ -165,12 +167,22 @@ class Members():
     @commands.command(pass_context=True)
     async def jump(self, ctx):
         """Join rusty."""
-        msg = ctx.message.author.name + ' jumped and joined Rusty'
-        Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
-        Embed.set_image(url='https://cdn.discordapp.com/attachments/355869544113373184/356221955109814273/YouEvenStarcraft2.png')
-        await self.bot.send_message(ctx.message.channel, embed=Embed)
-        await asyncio.sleep(5)
-        await self.bot.delete_message(ctx.message)
+        author = ctx.message.author
+        if experience.getxp(author) < 10:
+            msg = 'You dont have enough rusty points, current amount {}\nFlip coins to win rusty points!!'.format(experience.getxp(author))
+            Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
+            message = await self.bot.send_message(ctx.message.channel, embed=Embed)
+            await asyncio.sleep(5)
+            await self.bot.delete_message(ctx.message)
+            await self.bot.delete_message(message)
+        else:
+            experience.removexp(author, 10)
+            msg = author.name + ' jumped and joined Rusty'
+            Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
+            Embed.set_image(url='https://cdn.discordapp.com/attachments/355869544113373184/356221955109814273/YouEvenStarcraft2.png')
+            await self.bot.send_message(ctx.message.channel, embed=Embed)
+            await asyncio.sleep(5)
+            await self.bot.delete_message(ctx.message)
 
 
 def setup(bot):

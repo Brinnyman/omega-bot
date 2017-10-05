@@ -48,7 +48,9 @@ class Moderator():
 
             except (AttributeError, ImportError) as e:
                 await self.bot.send_message(ctx.message.channel, "```py\n{}: {}\n```".format(type(e).__name__, str(e)))
-                return
+
+        await asyncio.sleep(5)
+        await self.bot.delete_message(ctx.message)
 
     @permit.check()
     @commands.command(pass_context=True)
@@ -62,6 +64,9 @@ class Moderator():
             else:
                 msg = "Extension {} can not be unloaded.".format(extension)
                 await self.bot.send_message(ctx.message.channel, "```py\n{}\n```".format(msg))
+
+        await asyncio.sleep(5)
+        await self.bot.delete_message(ctx.message)
 
 
 def setup(bot):

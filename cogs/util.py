@@ -21,18 +21,19 @@ class Util():
 
     async def on_message_delete(self, message):
         if message.author.id is not message.server.me.id:
-            if len(message.attachments) > 0:
-                content = message.attachments[0].get('url')
-            else:
-                content = message.content
+            if message.content[:1] is not '!':
+                if len(message.attachments) > 0:
+                    content = message.attachments[0].get('url')
+                else:
+                    content = message.content
 
-            date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            Embed = discord.Embed(description='Message deleted:', color=message.server.me.color)
-            Embed.add_field(name='Message:', value=content, inline=False)
-            Embed.add_field(name='Channel:', value=message.channel, inline=False)
-            Embed.add_field(name='Author:', value=message.author, inline=False)
-            Embed.set_footer(text='Deleted on {}'.format(date))
-            await self.bot.send_message(self.bot.get_channel(config.logchannel), embed=Embed)
+                date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                Embed = discord.Embed(description='Message deleted:', color=message.server.me.color)
+                Embed.add_field(name='Message:', value=content, inline=False)
+                Embed.add_field(name='Channel:', value=message.channel, inline=False)
+                Embed.add_field(name='Author:', value=message.author, inline=False)
+                Embed.set_footer(text='Deleted on {}'.format(date))
+                await self.bot.send_message(self.bot.get_channel(config.logchannel), embed=Embed)
 
     # async def createchannel():
     #     pass

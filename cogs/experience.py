@@ -34,10 +34,8 @@ class Experience:
             for data in db.search(where('userid') == self.userid):
                 if data['xp'] - self.userxp < 0:
                     data['xp'] = 0
-                    print('less then 0')
                 else:
                     data['xp'] -= self.userxp
-                    print('is higher then 0')
 
                 db.update({'xp': data['xp']}, where('userid') == self.userid)
         else:

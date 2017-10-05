@@ -14,3 +14,4 @@ class Configuration():
         self.token = config.get('Credentials', 'token')
         self.ownerid = config.get('Permission', 'ownerid')
         self.permitted = config.get('Permission', 'permitted')
+        self.logchannel = config.get('Channel', 'logchannel')

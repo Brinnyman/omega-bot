@@ -1,25 +1,23 @@
 import discord
-import asyncio
 import datetime
+import asyncio
 from discord.ext import commands
 from cogs.config import Configuration
-from cogs.permission import Permission
 config = Configuration()
-permit = Permission()
 
 description = '''Omega chat bot'''
-startup_extensions = ["members", "moderator", "help"]
+startup_extensions = ["util", "members", "moderator", "help"]
 bot = commands.Bot(command_prefix=config.prefix, description=description)
 
 
 @bot.event
 async def on_ready():
+    date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
-    print(datetime.datetime.now())
+    print(date)
     print('------')
-    await bot.change_presence(game=discord.Game(name='observing...', status=None, afk=False))
 
 
 @bot.event

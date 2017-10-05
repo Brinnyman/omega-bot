@@ -2,7 +2,9 @@ import discord
 import asyncio
 from discord.ext import commands
 from .permission import Permission
+from .config import Configuration
 permit = Permission()
+config = Configuration()
 
 
 class Moderator():
@@ -14,6 +16,7 @@ class Moderator():
     async def ping(self, ctx):
         """Sends a ping to the bot"""
         msg = 'Pong!'
+        # if ctx.message.channel.id == config.musicchannel:
         Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
         message = await self.bot.send_message(ctx.message.channel, embed=Embed)
 

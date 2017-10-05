@@ -16,7 +16,7 @@ class Util():
             Embed.add_field(name='After:', value=after.content, inline=False)
             Embed.add_field(name='Channel:', value=before.channel, inline=False)
             Embed.set_footer(text='Edited by: {} on {}'.format(after.author, date), icon_url=after.author.avatar_url)
-            await self.bot.send_message(self.bot.get_channel(config.modlogchannel), embed=Embed)
+            await self.bot.send_message(self.bot.get_channel(config.logchannel), embed=Embed)
 
     async def on_message_delete(self, message):
         if message.author.id is not message.server.me.id:
@@ -30,7 +30,7 @@ class Util():
             Embed.add_field(name='Message:', value=content, inline=False)
             Embed.add_field(name='Channel:', value=message.channel, inline=False)
             Embed.set_footer(text='Deleted by: {} on {}'.format(message.author, date), icon_url=message.author.avatar_url)
-            await self.bot.send_message(self.bot.get_channel(config.modlogchannel), embed=Embed)
+            await self.bot.send_message(self.bot.get_channel(config.logchannel), embed=Embed)
 
     # async def createchannel():
     #     pass

@@ -3,7 +3,9 @@ import asyncio
 import random
 from discord.ext import commands
 from .experience import Experience
+from .config import Configuration
 experience = Experience()
+config = Configuration()
 
 
 class Members():
@@ -150,19 +152,20 @@ class Members():
     @commands.command(pass_context=True)
     async def flip(self, ctx):
         """Flips a coin."""
-        author = ctx.message.author
-        coin = random.randint(1, 2)
-        if coin == 1:
-            experience.setxp(author, 5)
-            msg = '{} flipped Heads and received 5 Rusty points!!'.format(author.name)
-            Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
-        if coin == 2:
-            experience.removexp(author, 2)
-            msg = '{} flipped tails and lost 2 Rusty points!!'.format(author.name)
-            Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
-        await self.bot.send_message(ctx.message.channel, embed=Embed)
-        await asyncio.sleep(5)
-        await self.bot.delete_message(ctx.message)
+        if ctx.message.channel.id == config.testchannel:
+            author = ctx.message.author
+            coin = random.randint(1, 2)
+            if coin == 1:
+                experience.setxp(author, 5)
+                msg = '{} flipped Heads and received 5 Rusty points!!'.format(author.name)
+                Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
+            if coin == 2:
+                experience.removexp(author, 2)
+                msg = '{} flipped tails and lost 2 Rusty points!!'.format(author.name)
+                Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
+            await self.bot.send_message(ctx.message.channel, embed=Embed)
+            await asyncio.sleep(5)
+            await self.bot.delete_message(ctx.message)
 
     @commands.command(pass_context=True)
     async def jump(self, ctx):
@@ -172,8 +175,6 @@ class Members():
             msg = 'You dont have enough Rusty points, current amount {}\nYou need 10 Rusty points to join him\nFlip coins to win Rusty points!!'.format(experience.getxp(author))
             Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
             message = await self.bot.send_message(ctx.message.channel, embed=Embed)
-            await asyncio.sleep(5)
-            await self.bot.delete_message(ctx.message)
             await self.bot.delete_message(message)
         else:
             experience.removexp(author, 10)
@@ -181,8 +182,9 @@ class Members():
             Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
             Embed.set_image(url='https://cdn.discordapp.com/attachments/355869544113373184/356221955109814273/YouEvenStarcraft2.png')
             await self.bot.send_message(ctx.message.channel, embed=Embed)
-            await asyncio.sleep(5)
-            await self.bot.delete_message(ctx.message)
+
+        await asyncio.sleep(5)
+        await self.bot.delete_message(ctx.message)
 
 
 def setup(bot):

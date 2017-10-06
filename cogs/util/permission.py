@@ -51,7 +51,7 @@ class Permission:
                 has_permission = True
             else:
                 for i in author.roles:
-                    if i.id in config.permitted:
+                    if str(i.id) in config.permitted:
                         whitelist = self.create_whitelist(i.name)
                         for i in whitelist:
                             if command in i:

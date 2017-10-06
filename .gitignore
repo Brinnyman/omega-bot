@@ -1,2 +1,3 @@
 config/*
 cogs/__pycache__/*
+cogs/util/__pycache__/*

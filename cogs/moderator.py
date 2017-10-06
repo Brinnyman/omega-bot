@@ -1,10 +1,8 @@
 import discord
 import asyncio
 from discord.ext import commands
-from .permission import Permission
-from .config import Configuration
+from .util.permission import Permission
 permit = Permission()
-config = Configuration()
 
 
 class Moderator():
@@ -12,61 +10,72 @@ class Moderator():
         self.bot = bot
 
     @permit.check()
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, hidden=True)
     async def ping(self, ctx):
         """Sends a ping to the bot"""
-        msg = 'Pong!'
-        # if ctx.message.channel.id == config.musicchannel:
-        Embed = discord.Embed(description=msg, color=ctx.message.server.me.color)
-        message = await self.bot.send_message(ctx.message.channel, embed=Embed)
-
-        await asyncio.sleep(5)
-        await self.bot.delete_message(message)
-        await self.bot.delete_message(ctx.message)
-
-    @permit.check()
-    @commands.command(pass_context=True)
-    async def presence(self, ctx, state: str=None):
-        """Change the presence state of the bot"""
-        if state:
-            await self.bot.change_presence(game=discord.Game(name=state, status=None, afk=False))
-        else:
-            await self.bot.change_presence(game=discord.Game(name=state, status=None, afk=False))
-
+        await self.bot.send_message(ctx.message.channel, 'pong')
         await asyncio.sleep(5)
         await self.bot.delete_message(ctx.message)
 
     @permit.check()
-    @commands.command(pass_context=True)
-    async def load(self, ctx, *extension_names: str):
-        """Loads an extension."""
-        for extension in extension_names:
-            try:
-                self.bot.load_extension('cogs.'+extension)
-                msg = "Extension {} has been loaded.".format(extension)
-                await self.bot.send_message(ctx.message.channel, "```py\n{}\n```".format(msg))
-
-            except (AttributeError, ImportError) as e:
-                await self.bot.send_message(ctx.message.channel, "```py\n{}: {}\n```".format(type(e).__name__, str(e)))
-
-        await asyncio.sleep(5)
-        await self.bot.delete_message(ctx.message)
-
-    @permit.check()
-    @commands.command(pass_context=True)
-    async def unload(self, ctx, *extension_names: str):
-        """Unloads an extension."""
-        for extension in extension_names:
-            if(extension != 'moderator'):
-                self.bot.unload_extension('cogs.'+extension)
-                msg = "Extension {} has been unloaded.".format(extension)
-                await self.bot.send_message(ctx.message.channel, "```py\n{}\n```".format(msg))
+    @commands.command(pass_context=True, hidden=True)
+    async def presence(self, ctx, *, game: str=None):
+        """Change the status to 'playing <game>'"""
+        try:
+            if game:
+                await self.bot.change_presence(game=discord.Game(name=game, status=None, afk=False))
             else:
-                msg = "Extension {} can not be unloaded.".format(extension)
-                await self.bot.send_message(ctx.message.channel, "```py\n{}\n```".format(msg))
+                await self.bot.change_presence(game=discord.Game(name=game, status=None, afk=False))
+        except Exception as e:
+            print('{}: {}'.format(type(e).__name__, e))
+        else:
+            await self.bot.send_message(ctx.message.channel, 'presence updated.')
+            await asyncio.sleep(5)
+            await self.bot.delete_message(ctx.message)
 
-        await asyncio.sleep(5)
-        await self.bot.delete_message(ctx.message)
+    @permit.check()
+    @commands.command(pass_context=True, hidden=True)
+    async def load(self, ctx, *, extension: str):
+        """Loads an extension."""
+        extension = 'cogs.{}'.format(extension)
+        try:
+            self.bot.load_extension(extension)
+        except Exception as e:
+            print('{}: {}'.format(type(e).__name__, e))
+        else:
+            print(extension + ' extension loaded')
+            await asyncio.sleep(5)
+            await self.bot.delete_message(ctx.message)
+
+    @permit.check()
+    @commands.command(pass_context=True, hidden=True)
+    async def unload(self, ctx, *, extension: str):
+        """Unloads an extension."""
+        extension = 'cogs.{}'.format(extension)
+        try:
+            self.bot.unload_extension('cogs.'+extension)
+        except Exception as e:
+            print('{}: {}'.format(type(e).__name__, e))
+        else:
+            print(extension + ' extension unloaded')
+            await asyncio.sleep(5)
+            await self.bot.delete_message(ctx.message)
+
+    @permit.check()
+    @commands.command(pass_context=True, hidden=True)
+    async def reload(self, ctx, *, extension: str):
+        """Reloads an extension."""
+        extension = 'cogs.{}'.format(extension)
+        try:
+            self.bot.unload_extension('cogs.'+extension)
+            await asyncio.sleep(1)
+            self.bot.load_extension('cogs.'+extension)
+        except Exception as e:
+            print('{}: {}'.format(type(e).__name__, e))
+        else:
+            print(extension + ' extension reloaded')
+            await asyncio.sleep(5)
+            await self.bot.delete_message(ctx.message)
 
 
 def setup(bot):

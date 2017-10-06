@@ -2,11 +2,11 @@ import discord
 import datetime
 import asyncio
 from discord.ext import commands
-from cogs.config import Configuration
+from cogs.util.config import Configuration
 config = Configuration()
 
 description = '''Omega chat bot'''
-startup_extensions = ["util", "members", "moderator", "help"]
+startup_extensions = ["members", "moderator", "help"]
 bot = commands.Bot(command_prefix=config.prefix, description=description)
 
 

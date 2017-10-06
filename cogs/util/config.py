@@ -3,6 +3,7 @@ import os
 
 path = os.path.abspath('')
 config_file = os.path.join(path, 'config', 'config.ini')
+example_config = os.path.join(path, 'config', 'example-config.ini')
 
 
 class Configuration():

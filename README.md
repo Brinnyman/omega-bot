@@ -2,7 +2,7 @@
 
 ## How To Use
 
-To clone and run this application, you'll need [Git](https://git-scm.com), [Python3.5](https://www.python.org/downloads/release/python-350/) and [discord-py]() installed on your computer. From your command line:
+To clone and run this application, you'll need [Git](https://git-scm.com), [Python3.5](https://www.python.org/downloads/release/python-350/) and [discord-py](https://github.com/Rapptz/discord.py) installed on your computer. From your command line:
 
 ```bash
 # Clone this repository

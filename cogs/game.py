@@ -103,7 +103,7 @@ class Game():
 
     @permit.check()
     @commands.command(pass_context=True)
-    async def removexp(self, ctx, *, member: discord.Member, amount: str):
+    async def removexp(self, ctx, member: discord.Member, amount: str):
         """Removes experience points from a members."""
         try:
             self.removepoints(member, amount)
@@ -140,6 +140,7 @@ class Game():
             if self.getpoints(ctx.message.author) < 10:
                 message = 'You dont have enough Rusty points, current amount {}\n'.format(self.getpoints(ctx.message.author))
                 message += 'You need 10 Rusty points to join him\nFlip coins to win Rusty points!!'
+                msg = await self.bot.send_message(ctx.message.channel, message)
             else:
                 self.removepoints(ctx.message.author, 10)
                 message = ctx.message.author.name + ' jumped and joined Rusty'
@@ -149,7 +150,8 @@ class Game():
         except Exception as e:
             print('{}: {}'.format(type(e).__name__, e))
         else:
-            await self.bot.send_message(ctx.message.channel, message)
+            await asyncio.sleep(5)
+            await self.bot.delete_message(msg)
             await asyncio.sleep(5)
             await self.bot.delete_message(ctx.message)
 

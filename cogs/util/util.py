@@ -24,6 +24,17 @@ class Util():
                 Embed.set_footer(text='Deleted on {}'.format(date))
                 await self.bot.send_message(self.bot.get_channel(config.logchannel), embed=Embed)
 
+    async def on_message_edit(self, before, after):
+        if before.author.id is not before.server.me.id:
+            date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            Embed = discord.Embed(description='Message edited:', color=before.server.me.color)
+            Embed.add_field(name='Before:', value=before.content, inline=False)
+            Embed.add_field(name='After:', value=after.content, inline=False)
+            Embed.add_field(name='Author:', value=before.author, inline=False)
+            Embed.add_field(name='Channel:', value=before.channel, inline=False)
+            Embed.set_footer(text='Edited on {}'.format(date))
+            await self.bot.send_message(self.bot.get_channel(config.logchannel), embed=Embed)
+
 
 def setup(bot):
     bot.add_cog(Util(bot))

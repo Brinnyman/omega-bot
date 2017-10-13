@@ -16,5 +16,3 @@ class Configuration():
         self.ownerid = config.get('Permission', 'ownerid')
         self.permitted = config.get('Permission', 'permitted')
         self.logchannel = config.get('Channel', 'logchannel')
-        self.musicchannel = config.get('Channel', 'musicchannel')
-        self.testchannel = config.get('Channel', 'testchannel')

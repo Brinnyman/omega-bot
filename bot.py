@@ -1,9 +1,12 @@
+import logging
 import discord
 import datetime
 import asyncio
 from discord.ext import commands
 from cogs.util.config import Configuration
 config = Configuration()
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 description = '''Omega chat bot'''
 startup_extensions = ["members", "moderator", "help"]
@@ -12,6 +15,7 @@ bot = commands.Bot(command_prefix=config.prefix, description=description)
 
 @bot.event
 async def on_ready():
+    logger.info('Loading the bot')
     date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print('Logged in as')
     print(bot.user.name)
